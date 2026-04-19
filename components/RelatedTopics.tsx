@@ -4,10 +4,7 @@ import type { Block, Topic } from "@/lib/types";
 import { BlockIcon } from "./BlockIcon";
 import { cn } from "@/lib/cn";
 
-interface Item {
-  topic: Topic;
-  block: Block;
-}
+interface Item { topic: Topic; block: Block; }
 
 export function RelatedTopics({ items }: { items: Item[] }) {
   if (items.length === 0) return null;
@@ -15,7 +12,7 @@ export function RelatedTopics({ items }: { items: Item[] }) {
   return (
     <section className="mt-16 border-t border-border-subtle pt-10">
       <p className="label">Conecta com</p>
-      <h2 className="mt-2 text-xl font-semibold tracking-tight text-fg">
+      <h2 className="mt-2 text-xl font-bold tracking-tight text-fg">
         Leituras relacionadas
       </h2>
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -23,15 +20,12 @@ export function RelatedTopics({ items }: { items: Item[] }) {
           <Link
             key={topic.slug}
             href={`/topico/${topic.slug}`}
-            className={cn(
-              block.colorClass,
-              "card card-hover group relative overflow-hidden p-4"
-            )}
+            className={cn(block.colorClass, "card card-hover card-accent-line group relative overflow-hidden p-4")}
           >
             <div className="flex items-start gap-3">
               <div
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border-subtle bg-bg-subtle"
-                style={{ color: block.color }}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-transform duration-200 group-hover:scale-105"
+                style={{ color: block.color, borderColor: `${block.color}30`, background: `${block.color}10` }}
               >
                 <BlockIcon iconKey={block.iconKey} size={15} strokeWidth={1.75} />
               </div>
@@ -39,13 +33,9 @@ export function RelatedTopics({ items }: { items: Item[] }) {
                 <p className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
                   {topic.number} · {block.shortName}
                 </p>
-                <p className="mt-1 line-clamp-1 text-sm font-semibold text-fg">
-                  {topic.title}
-                </p>
+                <p className="mt-1 line-clamp-1 text-sm font-semibold text-fg">{topic.title}</p>
                 {topic.excerpt && (
-                  <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-fg-muted">
-                    {topic.excerpt}
-                  </p>
+                  <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-fg-muted">{topic.excerpt}</p>
                 )}
               </div>
               <ArrowUpRight

@@ -4,60 +4,36 @@ import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const DEBOUNCE_MS = 300;
-
-function buildSearchUrl(query: string): string {
-  const trimmed = query.trim();
-  return trimmed ? `/busca?q=${encodeURIComponent(trimmed)}` : "/busca";
-}
-
-export function SearchInput({
-  initialValue = "",
-  autoFocus = true
-}: {
-  initialValue?: string;
-  autoFocus?: boolean;
-}) {
-  const router = useRouter();
+export function SearchInput({ initialValue = "", autoFocus = true }: { initialValue?: string; autoFocus?: boolean }) {
   const [value, setValue] = useState(initialValue);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isFirstRender = useRef(true);
+  const router = useRouter();
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const initial = useRef(true);
 
-  // Debounce: só navega depois de 300ms sem digitação.
-  // Ignoramos o primeiro render para não sobrescrever a URL na entrada.
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      router.push(buildSearchUrl(value));
-    }, DEBOUNCE_MS);
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
+    if (initial.current) { initial.current = false; return; }
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      const q = value.trim();
+      router.push(q ? `/busca?q=${encodeURIComponent(q)}` : "/busca");
+    }, 300);
+    return () => { if (timer.current) clearTimeout(timer.current); };
   }, [value, router]);
 
   return (
     <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        router.push(buildSearchUrl(value));
+      onSubmit={(e) => {
+        e.preventDefault();
+        const q = value.trim();
+        router.push(q ? `/busca?q=${encodeURIComponent(q)}` : "/busca");
       }}
     >
-      <div className="flex h-12 items-center gap-3 rounded-lg border border-border bg-bg-elevated px-4 transition-colors focus-within:border-border-strong">
-        <Search
-          className="h-4 w-4 shrink-0 text-fg-subtle"
-          strokeWidth={2}
-          aria-hidden
-        />
+      <div className="flex h-12 items-center gap-3 rounded-xl border border-border bg-bg-elevated px-4 transition-all focus-within:border-accent/30 focus-within:shadow-glow-green-sm">
+        <Search className="h-4 w-4 shrink-0 text-accent/60" strokeWidth={2} aria-hidden />
         <input
           type="search"
           value={value}
-          onChange={(event) => setValue(event.target.value)}
+          onChange={(e) => setValue(e.target.value)}
           placeholder="Buscar tópicos, ferramentas, termos…"
           autoFocus={autoFocus}
           aria-label="Buscar"
@@ -67,7 +43,7 @@ export function SearchInput({
           <button
             type="button"
             onClick={() => setValue("")}
-            className="rounded p-1 text-fg-subtle transition-colors hover:text-fg"
+            className="rounded-lg p-1 text-fg-subtle transition hover:text-fg"
             aria-label="Limpar"
           >
             <X className="h-4 w-4" strokeWidth={2} />

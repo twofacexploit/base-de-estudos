@@ -8,9 +8,9 @@ const LABELS: Record<Difficulty, string> = {
 };
 
 const DOT: Record<Difficulty, string> = {
-  iniciante: "bg-emerald-400/80",
-  medio: "bg-amber-400/80",
-  avancado: "bg-rose-400/80"
+  iniciante: "bg-emerald-400",
+  medio: "bg-amber-400",
+  avancado: "bg-rose-400"
 };
 
 export function DifficultyBadge({

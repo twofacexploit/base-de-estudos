@@ -16,10 +16,10 @@ export function BlockTag({
     <span
       className={cn(
         block.colorClass,
-        "inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider transition-colors"
+        "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition-all"
       )}
       style={{
-        borderColor: `${block.color}35`,
+        borderColor: `${block.color}30`,
         color: block.color,
         background: `${block.color}10`
       }}
@@ -31,7 +31,7 @@ export function BlockTag({
 
   if (!asLink) return content;
   return (
-    <Link href={`/bloco/${block.slug}`} className={className}>
+    <Link href={`/bloco/${block.slug}`} className={cn("hover:opacity-80 transition-opacity", className)}>
       {content}
     </Link>
   );

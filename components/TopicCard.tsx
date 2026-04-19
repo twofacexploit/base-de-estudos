@@ -21,14 +21,15 @@ export function TopicCard({
         "card card-hover group relative flex h-full flex-col overflow-hidden p-5"
       )}
     >
+      {/* Linha lateral colorida no hover */}
       <div
-        className="absolute inset-y-0 left-0 w-px opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute inset-y-0 left-0 w-[2px] scale-y-0 transition-transform duration-300 group-hover:scale-y-100 origin-top"
         style={{ background: block.color }}
         aria-hidden
       />
 
       <div className="flex items-start justify-between gap-3">
-        <span className="font-mono text-[11px] uppercase tracking-wider text-fg-subtle">
+        <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
           {topic.number}
         </span>
         {studied && (

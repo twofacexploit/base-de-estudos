@@ -1,11 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-
-// Acima deste offset (em px) do topo, o tooltip é exibido acima do termo
-// para não ficar cortado na viewport.
-const TOOLTIP_FLIP_THRESHOLD = 220;
+import { useState, useRef, useEffect } from "react";
 
 export function GlossaryTerm({
   term,
@@ -17,18 +13,18 @@ export function GlossaryTerm({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
-  const [showAbove, setShowAbove] = useState(false);
-  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [above, setAbove] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!open || !anchorRef.current) return;
-    const rect = anchorRef.current.getBoundingClientRect();
-    setShowAbove(rect.top > TOOLTIP_FLIP_THRESHOLD);
+    if (!open || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    setAbove(rect.top > 240);
   }, [open]);
 
   return (
     <span
-      ref={anchorRef}
+      ref={ref}
       className="group relative inline"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
@@ -36,7 +32,7 @@ export function GlossaryTerm({
       onBlur={() => setOpen(false)}
     >
       <span
-        className="cursor-help underline decoration-dotted decoration-fg-subtle/70 underline-offset-2 transition hover:decoration-[color:var(--block)]"
+        className="cursor-help underline decoration-dotted decoration-accent/40 underline-offset-2 transition hover:decoration-accent"
         tabIndex={0}
       >
         {children}
@@ -45,16 +41,14 @@ export function GlossaryTerm({
         <span
           role="tooltip"
           className={`absolute left-1/2 z-50 w-64 -translate-x-1/2 ${
-            showAbove ? "bottom-full mb-2" : "top-full mt-2"
-          } pointer-events-auto rounded-lg border border-border-strong bg-bg-elevated p-3 text-left text-xs shadow-card-hover`}
+            above ? "bottom-full mb-2" : "top-full mt-2"
+          } pointer-events-auto rounded-xl border border-accent/15 bg-bg-elevated p-3.5 text-left text-xs shadow-[0_0_0_1px_rgba(74,222,128,0.08),0_16px_32px_rgba(0,0,0,0.6)]`}
         >
-          <span className="block font-semibold text-fg">{term}</span>
-          <span className="mt-1 block leading-relaxed text-fg-muted">
-            {definition}
-          </span>
+          <span className="block font-semibold text-accent">{term}</span>
+          <span className="mt-1.5 block leading-relaxed text-fg-muted">{definition}</span>
           <Link
             href="/glossario"
-            className="mt-2 inline-block text-[11px] font-medium text-fg-subtle transition hover:text-fg"
+            className="mt-2.5 inline-block text-[11px] font-medium text-fg-subtle transition hover:text-accent"
           >
             Ver glossário completo →
           </Link>
