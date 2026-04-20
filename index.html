@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechSimples</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Bricolage+Grotesque:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --bg:       #09090B;
+  --bg2:      #0F0F12;
+  --bg3:      #18181C;
+  --surface:  #1C1C21;
+  --surface2: #222228;
+  --accent:   #6366F1;
+  --accent2:  #818CF8;
+  --accent3:  #C7D2FE;
+  --adim:     rgba(99,102,241,.12);
+  --aline:    rgba(99,102,241,.28);
+  --text:     #FAFAFA;
+  --text2:    #A1A1AA;
+  --text3:    #52525B;
+  --border:   rgba(255,255,255,.06);
+  --border2:  rgba(255,255,255,.10);
+  --r:        8px;
+  --rl:       12px;
+  --rxl:      16px;
+}
+body{font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(9,9,11,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1120px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.05rem;color:var(--text);letter-spacing:-.01em}
+.nav-logo-mark{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;font-family:'Bricolage Grotesque',sans-serif}
+.nav-cats{display:flex;align-items:center;gap:2px;list-style:none;flex:1;justify-content:center;padding:0 1rem}
+.nav-cats li a{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;padding:5px 11px;border-radius:6px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-cats li a:hover{color:var(--text);background:var(--surface)}
+.nav-cats li a.active{color:var(--accent2);background:var(--adim)}
+.menu-btn{display:flex;align-items:center;justify-content:center;background:none;border:1px solid var(--border2);cursor:pointer;padding:8px;border-radius:8px;transition:border-color .2s,background .2s;flex-shrink:0}
+.menu-btn:hover{border-color:var(--aline);background:var(--adim)}
+.menu-btn-icon{display:flex;flex-direction:column;gap:4px;width:18px}
+.menu-btn-icon span{display:block;height:1.5px;background:var(--text2);border-radius:1px;transition:width .2s,background .2s}
+.menu-btn-icon span:nth-child(2){width:12px}
+.menu-btn:hover .menu-btn-icon span{background:var(--accent2)}
+.menu-btn:hover .menu-btn-icon span:nth-child(2){width:18px}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;z-index:500;background:var(--bg2);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.open{opacity:1;pointer-events:all}
+.ov-bar{display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:56px;border-bottom:1px solid var(--border);flex-shrink:0}
+.ov-logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1rem;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px}
+.ov-close{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--border2);cursor:pointer;padding:6px 14px;border-radius:99px;transition:border-color .2s}
+.ov-close:hover{border-color:var(--accent)}
+.ov-close-label{font-size:13px;font-weight:500;color:var(--text2)}
+.ov-close-x{width:16px;height:16px;position:relative;display:flex;align-items:center;justify-content:center}
+.ov-close-x::before,.ov-close-x::after{content:'';position:absolute;width:14px;height:1.5px;background:var(--text2)}
+.ov-close-x::before{transform:rotate(45deg)}
+.ov-close-x::after{transform:rotate(-45deg)}
+.ov-body{flex:1;overflow-y:auto;padding:2rem 1.5rem 3rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2rem 3rem;align-content:start}
+.ov-block-head{display:flex;align-items:center;gap:8px;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+.ov-block-num{font-size:11px;font-weight:600;color:var(--accent2);background:var(--adim);padding:2px 7px;border-radius:4px;letter-spacing:.04em}
+.ov-block-name{font-size:.95rem;font-weight:600;color:var(--text)}
+.ov-block-abbr{font-size:10px;font-weight:700;color:var(--accent2);background:var(--adim);padding:2px 7px;border-radius:4px}
+.ov-links{list-style:none}
+.ov-links li a{display:flex;align-items:center;gap:8px;text-decoration:none;padding:6px 0;border-bottom:1px solid var(--border);transition:color .15s}
+.ov-links li:last-child a{border-bottom:none}
+.ov-links li a:hover{color:var(--accent2)}
+.ov-link-num{font-size:11px;font-weight:600;color:var(--text3);width:28px;flex-shrink:0}
+.ov-link-name{font-size:13px;font-weight:400;color:var(--text2);flex:1;line-height:1.35}
+.ov-links li a:hover .ov-link-name{color:var(--text)}
+.ov-links li a:hover .ov-link-num{color:var(--accent2)}
+.ov-link-new{font-size:10px;font-weight:600;color:var(--accent2);background:var(--adim);padding:1px 6px;border-radius:4px;flex-shrink:0}
+.ov-link-soon{font-size:11px;color:var(--text3);font-style:normal;flex-shrink:0;font-weight:400}
+footer{border-top:1px solid var(--border);padding:2rem 1.5rem;text-align:center;font-size:12px;font-weight:500;color:var(--text3);letter-spacing:.01em;position:relative;z-index:1}
+footer a{color:var(--accent2);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* HERO */
+.hero{max-width:1120px;margin:0 auto;padding:5.5rem 1.5rem 4rem;position:relative;z-index:1}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.hero-left{padding-top:.5rem}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);background:var(--adim);border:1px solid var(--aline);padding:4px 12px;border-radius:99px;margin-bottom:1.75rem}
+.hero-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:3.5rem;line-height:1.05;color:var(--text);margin-bottom:1.15rem;letter-spacing:-.03em}
+.hero-title em{font-style:normal;background:linear-gradient(135deg,var(--accent2) 0%,#A78BFA 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:.95rem;font-weight:400;color:var(--text2);line-height:1.8;margin-bottom:0}
+
+/* HERO PANEL */
+.hero-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);overflow:hidden;display:flex;flex-direction:column}
+.hp-bar{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.hp-dots{display:flex;gap:5px}
+.hp-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3)}
+.hp-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.hp-body{padding:1rem;display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.hp-row{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:border-color .2s,background .2s}
+.hp-row:hover{border-color:var(--aline);background:var(--surface2)}
+.hp-tag{font-size:10px;font-weight:700;color:var(--accent2);width:28px;flex-shrink:0;text-align:right}
+.hp-rname{font-size:13px;font-weight:400;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hp-new{font-size:10px;font-weight:600;color:var(--accent2);background:var(--adim);padding:2px 6px;border-radius:4px;flex-shrink:0}
+
+/* SECTION HEADER */
+.section-header{max-width:1120px;margin:0 auto;padding:4rem 1.5rem 1.5rem;display:flex;align-items:center;gap:1.5rem;z-index:1;position:relative}
+.sh-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);margin-bottom:.2rem}
+.sh-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.6rem;color:var(--text);letter-spacing:-.02em}
+.sh-line{flex:1;height:1px;background:linear-gradient(to right,var(--border2),transparent)}
+
+/* BLOCKS */
+.block{max-width:1120px;margin:0 auto;padding:2.5rem 1.5rem 0;z-index:1;position:relative}
+.block-head{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+.block-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.block-abbr{font-size:11px;font-weight:700;color:var(--accent2);background:var(--adim);padding:3px 8px;border-radius:5px}
+.block-name{font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.block-rule{flex:1;height:1px;background:var(--border)}
+.block-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:.75rem;padding-bottom:.5rem}
+
+/* TOPIC CARD */
+.topic-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;cursor:pointer;text-decoration:none;color:inherit;display:block;transition:border-color .2s,transform .2s,background .2s;position:relative;overflow:hidden}
+.topic-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,var(--adim) 0%,transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none}
+.topic-card:hover{border-color:var(--aline);transform:translateY(-2px);background:var(--bg3)}
+.topic-card:hover::before{opacity:1}
+.tc-num{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--text3);margin-bottom:.65rem;font-variant-numeric:tabular-nums}
+.tc-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.05rem;color:var(--text);margin-bottom:.5rem;line-height:1.3;letter-spacing:-.01em}
+.tc-desc{font-size:13px;font-weight:400;color:var(--text2);line-height:1.6;margin-bottom:1.25rem}
+.tc-foot{display:flex;align-items:center;justify-content:space-between}
+.tc-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;letter-spacing:.04em;text-transform:uppercase}
+.tc-badge.new{color:var(--accent2);background:var(--adim);border:1px solid var(--aline)}
+.tc-arr{font-size:14px;color:var(--text3);transition:transform .2s,color .2s}
+.topic-card:hover .tc-arr{transform:translateX(4px);color:var(--accent2)}
+.card-coming{border:1px dashed var(--border);border-radius:var(--rl);padding:1.5rem;opacity:.3}
+.card-coming .tc-title{font-size:.975rem;font-weight:500;color:var(--text2)}
+.card-coming .tc-num{font-size:10px;color:var(--text3)}
+
+/* GUIDE PAGE */
+.guide-page{display:none;max-width:760px;margin:0 auto;padding:3rem 1.5rem 8rem;z-index:1;position:relative}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text2);background:transparent;border:1px solid var(--border2);padding:7px 16px;border-radius:99px;cursor:pointer;transition:color .15s,border-color .15s;margin-bottom:3rem;text-decoration:none}
+.back-btn:hover{color:var(--text);border-color:var(--border2)}
+
+/* GUIDE CONTENT */
+.g-kicker{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);background:var(--adim);border:1px solid var(--aline);padding:3px 10px;border-radius:99px;margin-bottom:1rem}
+.g-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:2.8rem;color:var(--text);line-height:1.1;margin-bottom:1.25rem;letter-spacing:-.03em}
+.g-intro{font-size:1.025rem;font-weight:400;color:var(--text2);border-left:2px solid var(--accent);padding-left:1.25rem;line-height:1.8;margin-bottom:2.5rem}
+.g-toc{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:3rem}
+.toc-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem}
+.toc-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.toc-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:4px 2rem}
+.toc-list a{font-size:13px;font-weight:500;color:var(--accent2);text-decoration:none}
+.toc-list a:hover{text-decoration:underline}
+.g-sec{margin-bottom:4rem}
+.g-sec-kicker{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.4rem}
+.g-sec h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.9rem;color:var(--text);margin-bottom:1.25rem;line-height:1.15;letter-spacing:-.02em}
+.g-sec h3{font-size:.9rem;font-weight:700;color:var(--text);margin:2rem 0 .75rem;letter-spacing:.02em;text-transform:uppercase}
+.g-sec p{margin-bottom:1rem;color:var(--text2);font-weight:400;line-height:1.75}
+.box-a{background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin:1.75rem 0;font-size:15px}
+.box-a-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);margin-bottom:.5rem}
+.box-a p{color:var(--text2);margin:0;line-height:1.7}
+.box-i{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.75rem 2rem;margin:2.5rem 0;position:relative;overflow:hidden}
+.box-i::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--accent),transparent)}
+.box-i-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);margin-bottom:1rem}
+.box-i p{color:var(--text2);font-size:15px;margin-bottom:.6rem;line-height:1.75}
+.box-i p:last-child{margin-bottom:0}
+.box-t{background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin:1.75rem 0;font-size:15px}
+.box-t-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2DD4BF;margin-bottom:.5rem}
+.box-t p{color:var(--text2);margin:0;line-height:1.7}
+.ex-head{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text);margin:2.5rem 0 1.5rem;display:flex;align-items:center;gap:1rem;letter-spacing:-.01em}
+.ex-head::after{content:'';flex:1;height:1px;background:var(--border)}
+.ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;margin-bottom:.6rem;transition:border-color .2s}
+.ex-card:hover{border-color:var(--border2)}
+.ex-n{font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.05em;margin-bottom:.65rem;background:var(--adim);display:inline-flex;align-items:center;justify-content:center;width:26px;height:22px;border-radius:5px}
+.ex-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:.5rem;line-height:1.4;letter-spacing:-.01em}
+.ex-card p{font-size:13.5px;color:var(--text2);margin-bottom:.5rem;line-height:1.7}
+.ex-card p:last-child{margin-bottom:0}
+.g-table{width:100%;border-collapse:collapse;margin:2rem 0;font-size:13.5px;border-radius:var(--rl);overflow:hidden;border:1px solid var(--border2)}
+.g-table thead tr{background:var(--surface2)}
+.g-table thead th{padding:.85rem 1.25rem;text-align:left;color:var(--accent2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.g-table tbody tr{border-bottom:1px solid var(--border)}
+.g-table tbody tr:last-child{border-bottom:none}
+.g-table tbody td{padding:.85rem 1.25rem;vertical-align:top;line-height:1.5}
+.g-table tbody td:first-child{font-weight:600;color:var(--text)}
+.g-table tbody td:last-child{color:var(--text2)}
+.g-table tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+.g-rule{border:none;border-top:1px solid var(--border);margin:3.5rem 0}
+.g-pull{font-family:'Bricolage Grotesque',sans-serif;font-size:1.35rem;font-weight:500;color:var(--text2);border-left:3px solid var(--accent);padding-left:1.5rem;margin:2.5rem 0;line-height:1.5;letter-spacing:-.01em;font-style:italic}
+.end-pad{padding-bottom:5rem}
+.guides-header{max-width:1120px;margin:0 auto;padding:4.5rem 1.5rem 1.75rem;display:flex;align-items:center;gap:1.25rem;position:relative;z-index:1}
+.guides-header-left{display:flex;align-items:baseline;gap:.75rem;flex-shrink:0}
+.guides-header-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.5rem;color:var(--text);letter-spacing:-.025em}
+.guides-header-count{font-size:12px;font-weight:600;color:var(--text3);background:var(--surface);border:1px solid var(--border);padding:3px 10px;border-radius:99px;letter-spacing:.01em}
+.guides-header-rule{flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+#home{background:var(--bg)}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:2rem}
+  .hero-panel{max-height:260px}
+  .hp-body{max-height:180px}
+  .hero{padding:4rem 1.25rem 3rem}
+  .hero-title{font-size:2.75rem}
+  .guides-header{padding:3rem 1.25rem 1.5rem}
+  .block{padding:2rem 1.25rem 0}
+  .block-grid{grid-template-columns:1fr}
+  .guide-page{padding:2rem 1.25rem 5rem}
+  .g-title{font-size:2rem}
+  .toc-list{grid-template-columns:1fr}
+  .ov-body{grid-template-columns:1fr}
+  .nav-inner{padding:0 1.25rem}
+  .nav-cats{display:none}
+}
+@media(max-width:480px){
+  .hero-title{font-size:2.2rem}
+  .g-title{font-size:1.75rem}
+  .g-sec h2{font-size:1.5rem}
+  .hero-eyebrow{font-size:10px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#" onclick="showHome();return false;">
+      <span class="nav-logo-mark">T</span>
+      TechSimples
+    </a>
+    <ul class="nav-cats" id="nav-cats"></ul>
+    <button class="menu-btn" onclick="openMenu()" aria-label="Abrir menu">
+      <div class="menu-btn-icon">
+        <span></span><span></span><span></span>
+      </div>
+    </button>
+  </div>
+</nav>
+
+<div class="overlay" id="overlay">
+  <div class="ov-bar">
+    <span class="ov-logo" onclick="closeMenu();showHome();">TechSimples</span>
+    <button class="ov-close" onclick="closeMenu()">
+      <span class="ov-close-label">Fechar</span>
+      <span class="ov-close-x"></span>
+    </button>
+  </div>
+  <div class="ov-body" id="ov-body"></div>
+  <div style="padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:12px;font-weight:500;color:var(--text3)" id="ov-count"></span>
+    <a href="#" style="font-size:12px;font-weight:500;color:var(--text2);text-decoration:none" onclick="closeMenu();showHome();return false;">Ir para o início →</a>
+  </div>
+</div>
+
+<div id="home">
+  <div class="hero">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="hero-eyebrow">Guias sem complicação</div>
+        <h1 class="hero-title">Tecnologia explicada<br>do jeito <em>certo</em></h1>
+        <p class="hero-sub">Sem siglas jogadas na sua cara. Sem "é fácil, qualquer um entende". Aqui tudo tem nome, analogia e exemplo real — como se um amigo de confiança estivesse ao seu lado.</p>
+      </div>
+      <div class="hero-panel">
+        <div class="hp-bar">
+          <div class="hp-dots">
+            <div class="hp-dot"></div><div class="hp-dot"></div><div class="hp-dot"></div>
+          </div>
+          <span class="hp-label">Guias publicados</span>
+        </div>
+        <div class="hp-body" id="hp-body">
+          <div class="hp-row" style="opacity:.25;pointer-events:none;border-style:dashed;" id="hp-placeholder">
+            <span class="hp-tag">—</span>
+            <span class="hp-rname" style="color:var(--text3)">Primeiro guia em breve</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="guides-header" id="library">
+    <div class="guides-header-left">
+      <h2 class="guides-header-title">Todos os guias</h2>
+      <span class="guides-header-count" id="lib-count">—</span>
+    </div>
+    <div class="guides-header-rule"></div>
+  </div>
+
+  <div id="cats" class="end-pad"></div>
+</div>
+
+<div id="guides"></div>
+
+<footer>
+  <p>TechSimples &nbsp;·&nbsp; Nenhum mistério, nenhuma sigla solta &nbsp;·&nbsp;
+    <a href="#" onclick="showHome();return false;">Início</a>
+  </p>
+</footer>
+
+<script>
+function showHome(){
+  document.getElementById('home').style.display='block';
+  document.querySelectorAll('.guide-page').forEach(p=>p.style.display='none');
+  window.scrollTo({top:0,behavior:'smooth'});
+  return false;
+}
+function showGuide(id){
+  document.getElementById('home').style.display='none';
+  document.querySelectorAll('.guide-page').forEach(p=>p.style.display='none');
+  const p=document.getElementById('g-'+id);
+  if(p){p.style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
+  return false;
+}
+function openMenu(){
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMenu(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+
+const CATS={};
+let totalPublished=0;
+
+function registerCategory({id,num,abbr,name}){
+  if(CATS[id])return;
+  CATS[id]={id,num,abbr,name};
+  const cats=document.getElementById('cats');
+  const sec=document.createElement('div');
+  sec.className='block';
+  sec.id='cat-'+id;
+  sec.innerHTML=`
+    <div class="block-head">
+      <span class="block-num">Bloco ${num}</span>
+      <span class="block-abbr">${abbr}</span>
+      <span class="block-name">${name}</span>
+      <span class="block-rule"></span>
+    </div>
+    <div class="block-grid" id="grid-${id}"></div>
+  `;
+  cats.appendChild(sec);
+  const ovBody=document.getElementById('ov-body');
+  const ovBlock=document.createElement('div');
+  ovBlock.id='ov-block-'+id;
+  ovBlock.innerHTML=`
+    <div>
+      <div class="ov-block-head">
+        <span class="ov-block-num">Bloco ${num}</span>
+        <span class="ov-block-abbr">${abbr}</span>
+        <span class="ov-block-name">${name}</span>
+      </div>
+      <ul class="ov-links" id="ov-links-${id}"></ul>
+    </div>`;
+  ovBody.appendChild(ovBlock);
+  const navCats=document.getElementById('nav-cats');
+  if(navCats){
+    const li=document.createElement('li');
+    li.innerHTML=`<a href="#" onclick="showHome();setTimeout(()=>{const el=document.getElementById('cat-${id}');if(el)el.scrollIntoView({behavior:'smooth'})},80);return false;">${name}</a>`;
+    navCats.appendChild(li);
+  }
+}
+
+function registerTopic({id,catId,num,title,desc,html}){
+  totalPublished++;
+  const el=document.getElementById('lib-count');
+  if(el)el.textContent=totalPublished+' publicados';
+  const ph=document.getElementById('hp-placeholder');
+  if(ph)ph.remove();
+  const hpb=document.getElementById('hp-body');
+  const row=document.createElement('div');
+  row.className='hp-row';
+  row.onclick=()=>showGuide(id);
+  row.innerHTML=`<span class="hp-tag">${num}</span><span class="hp-rname">${title}</span><span class="hp-new">Novo</span>`;
+  hpb.appendChild(row);
+  const ovLinks=document.getElementById('ov-links-'+catId);
+  if(ovLinks){
+    const li=document.createElement('li');
+    li.innerHTML=`<a href="#" onclick="closeMenu();showGuide('${id}');return false;"><span class="ov-link-num">${num}</span><span class="ov-link-name">${title}</span><span class="ov-link-new">Novo</span></a>`;
+    ovLinks.appendChild(li);
+  }
+  const oc=document.getElementById('ov-count');
+  if(oc)oc.textContent=totalPublished+' publicados';
+  const grid=document.getElementById('grid-'+catId);
+  if(grid){
+    const card=document.createElement('a');
+    card.href='#';card.className='topic-card';
+    card.onclick=e=>{e.preventDefault();showGuide(id);};
+    card.innerHTML=`
+      <div class="tc-num">${num}</div>
+      <div class="tc-title">${title}</div>
+      <p class="tc-desc">${desc}</p>
+      <div class="tc-foot">
+        <span class="tc-badge new">Publicado</span>
+        <span class="tc-arr">→</span>
+      </div>`;
+    grid.appendChild(card);
+  }
+  const gc=document.getElementById('guides');
+  const page=document.createElement('div');
+  page.id='g-'+id;page.className='guide-page';
+  page.innerHTML=`<a class="back-btn" href="#" onclick="showHome();return false;">← Voltar</a>${html}`;
+  gc.appendChild(page);
+}
+
+function comingSoon({catId,num,title}){
+  const grid=document.getElementById('grid-'+catId);
+  if(grid){
+    const c=document.createElement('div');
+    c.className='card-coming';
+    c.innerHTML=`<div class="tc-num">${num}</div><div class="tc-title">${title}</div>`;
+    grid.appendChild(c);
+  }
+  const ovLinks=document.getElementById('ov-links-'+catId);
+  if(ovLinks){
+    const li=document.createElement('li');
+    li.innerHTML=`<a href="#" style="pointer-events:none;cursor:default;"><span class="ov-link-num">${num}</span><span class="ov-link-name" style="opacity:.38">${title}</span><span class="ov-link-soon">em breve</span></a>`;
+    ovLinks.appendChild(li);
+  }
+}
+</script>
+</body>
+</html>
